@@ -1,11 +1,19 @@
-var socket = io();
-console.log(socket);
+const socket = io();
+socket.on('add-circle', function(data) {
+  addCircle(data);
+});
 
 const circles = document.getElementById('circles');
 let initials = '';
 
 circles.addEventListener('click', function(evt) {
-  addCircle(evt.clientX, evt.clientY, randomBetween(10,125), getRandomRGBA());
+  socket.emit('add-circle', {
+    initials: initials,
+    x: evt.clientX,
+    y: evt.clientY,
+    dia: randomBetween(10, 100),
+    rgba: getRandomRGBA()
+  });
 });
 
 document.getElementsByTagName('button')[0].addEventListener('click', function() {
@@ -21,7 +29,7 @@ function getInitials() {
   return input ? input.toUpperCase() : '';
 }
 
-function addCircle(x, y, dia, rgba) {
+function addCircle({x, y, dia, rgba, initials}) {
   let el = document.createElement('div');
   el.style.left = x - Math.floor(dia / 2 + 0.5) + 'px';
   el.style.top = y - Math.floor(dia / 2 + 0.5) + 'px';

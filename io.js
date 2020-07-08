@@ -1,7 +1,9 @@
 const io = require('socket.io')();
 
 io.on('connection', function(socket) {
-    console.log('connected to socket.io');
+    socket.on('add-circle', function(data) {
+        io.emit('add-circle', data);
+    });
 });
 
 module.exports = io;
